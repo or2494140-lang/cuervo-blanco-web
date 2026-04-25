@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Animation Studios</title>
+
+<style>
+body {
+  margin:0;
+  background: radial-gradient(circle, #2b0000, #000000);
+  font-family: serif;
+  color:#ccc;
+  overflow-x:hidden;
+}
+
+/* Fondo animado sangre */
+body::before {
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  background: linear-gradient(180deg, rgba(255,0,0,0.05), transparent);
+  animation: sangre 5s infinite alternate;
+}
+
+@keyframes sangre {
+  from { opacity:0.2; }
+  to { opacity:0.6; }
+}
+
+/* LOGO */
+.logo {
+  text-align:center;
+  margin-top:40px;
+}
+
+.logo img {
+  width:250px;
+  filter: drop-shadow(0 0 10px red);
+}
+
+/* GRID */
+.grid {
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:20px;
+  padding:40px;
+}
+
+.box {
+  height:120px;
+  background:#111;
+  border:1px solid red;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.box:hover {
+  background:#300;
+  transform:scale(1.05);
+}
+
+/* MODAL */
+.modal {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-content {
+  max-width:80%;
+  max-height:80%;
+}
+
+/* OJOS */
+.eye {
+  position:fixed;
+  width:60px;
+  height:60px;
+  background:white;
+  border-radius:50%;
+}
+
+.pupil {
+  position:absolute;
+  width:20px;
+  height:20px;
+  background:red;
+  border-radius:50%;
+  top:20px;
+  left:20px;
+}
+
+/* posiciones ojos */
+#eye1 { top:20px; left:20px; }
+#eye2 { top:20px; right:20px; }
+
+/* LUCES */
+.light {
+  position:fixed;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  background: radial-gradient(circle, rgba(255,0,0,0.1), transparent);
+  animation: flicker 0.3s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity:0.2;}
+  50% { opacity:0.6;}
+  100% { opacity:0.3;}
+}
+
+/* DUENDE (simplificado creepy) */
+.goblin {
+  position:fixed;
+  bottom:0;
+  right:0;
+  width:120px;
+  opacity:0.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="logo">
+  <img src="logo.png">
+  <h1>ANIMATION STUDIOS</h1>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="modal" id="modal" onclick="closeModal()">
+  <img id="modalContent" class="modal-content">
+</div>
+
+<!-- OJOS -->
+<div class="eye" id="eye1"><div class="pupil"></div></div>
+<div class="eye" id="eye2"><div class="pupil"></div></div>
+
+<div class="light"></div>
+
+<!-- DUENDE (puedes cambiar imagen) -->
+<img src="https://i.imgur.com/4AiXzf8.png" class="goblin">
+
+<script>
+
+/* 🔥 AQUI CAMBIAS LINKS */
+const items = [
+  "https://picsum.photos/400",
+  "https://picsum.photos/401",
+  "https://picsum.photos/402",
+  "https://picsum.photos/403",
+  "https://picsum.photos/404",
+  "https://picsum.photos/405",
+  "https://picsum.photos/406",
+  "https://picsum.photos/407",
+  "https://picsum.photos/408",
+  "https://picsum.photos/409",
+  "https://picsum.photos/410",
+  "https://picsum.photos/411",
+  "https://picsum.photos/412",
+  "https://picsum.photos/413",
+  "https://picsum.photos/414",
+  "https://picsum.photos/415",
+  "https://picsum.photos/416",
+  "https://picsum.photos/417",
+  "https://picsum.photos/418",
+  "https://picsum.photos/419",
+  "https://picsum.photos/420",
+  "https://picsum.photos/421",
+  "https://picsum.photos/422",
+  "https://picsum.photos/423",
+  "https://picsum.photos/424"
+];
+
+/* CREAR CUADROS */
+const grid = document.getElementById("grid");
+
+items.forEach(link => {
+  const div = document.createElement("div");
+  div.className = "box";
+  div.onclick = () => openModal(link);
+  grid.appendChild(div);
+});
+
+/* MODAL */
+function openModal(src){
+  document.getElementById("modal").style.display="flex";
+  document.getElementById("modalContent").src=src;
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+}
+
+/* OJOS SIGUEN CURSOR */
+document.addEventListener("mousemove", e => {
+  document.querySelectorAll(".pupil").forEach(p => {
+    const x = (e.clientX / window.innerWidth) * 20;
+    const y = (e.clientY / window.innerHeight) * 20;
+    p.style.transform = `translate(${x}px, ${y}px)`;
+  });
+});
+
+</script>
+
+</body>
+</html>
