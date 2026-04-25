@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>HISTORIAS RARAS PARA MENTES RARAS</title>
+<title>Animation Studios</title>
 
 <style>
 
@@ -35,6 +35,282 @@ body::before {
   text-align:center;
   margin-top:40px;
 }
+
+.logo img {
+  width:250px;
+  filter: drop-shadow(0 0 15px red);
+}
+
+/* ===== GRID ===== */
+.grid {
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:20px;
+  padding:40px;
+}
+
+.box {
+  height:150px;
+  border:1px solid red;
+  cursor:pointer;
+  overflow:hidden;
+  position:relative;
+}
+
+.box img,
+.box video {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* overlay oscuro */
+.box::after {
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+}
+
+.box:hover::after {
+  background:rgba(0,0,0,0.1);
+}
+
+.box:hover {
+  transform:scale(1.05);
+}
+
+/* icono video */
+.video-icon {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  font-size:30px;
+  color:white;
+}
+
+/* ===== MODAL ===== */
+.modal {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.95);
+  justify-content:center;
+  align-items:center;
+}
+
+#modalContent {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-content {
+  max-width:95vw;
+  max-height:95vh;
+  object-fit:contain;
+  transition:0.2s;
+}
+
+/* ===== OJOS ===== */
+.eye {
+  position:fixed;
+  width:60px;
+  height:60px;
+  background:white;
+  border-radius:50%;
+  overflow:hidden;
+}
+
+.pupil {
+  position:absolute;
+  width:20px;
+  height:20px;
+  background:red;
+  border-radius:50%;
+  top:20px;
+  left:20px;
+}
+
+#eye1 { top:20px; left:20px; }
+#eye2 { top:20px; right:20px; }
+
+/* ===== LUCES ===== */
+.light {
+  position:fixed;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  background: radial-gradient(circle, rgba(255,0,0,0.15), transparent);
+  animation: flicker 0.2s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity:0.2;}
+  50% { opacity:0.6;}
+  100% { opacity:0.3;}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ===== LOGO ===== -->
+<div class="logo">
+  <!-- 🔴 PON TU LOGO AQUI -->
+  <img src="logo.png">
+  <h1>ANIMATION STUDIOS</h1>
+</div>
+
+<!-- ===== GRID ===== -->
+<div class="grid" id="grid"></div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal" id="modal" onclick="closeModal()">
+  <div id="modalContent"></div>
+</div>
+
+<!-- ===== OJOS ===== -->
+<div class="eye" id="eye1"><div class="pupil"></div></div>
+<div class="eye" id="eye2"><div class="pupil"></div></div>
+
+<div class="light"></div>
+
+<script>
+
+/* =====================================================
+🔥 AQUI PONES TUS LINKS (EDITA SOLO ESTO)
+===================================================== */
+
+const items = [
+
+  { type: "image", src: "https://res.cloudinary.com/dogerkjlk/image/upload/v1777120581/49_usmowb.png" },
+
+  { type: "video", src: "https://www.w3schools.com/html/mov_bbb.mp4" },
+
+  { type: "image", src: "https://picsum.photos/401" },
+  { type: "image", src: "https://picsum.photos/402" },
+  { type: "image", src: "https://picsum.photos/403" },
+  { type: "image", src: "https://picsum.photos/404" },
+  { type: "image", src: "https://picsum.photos/405" },
+  { type: "image", src: "https://picsum.photos/406" },
+  { type: "image", src: "https://picsum.photos/407" },
+  { type: "image", src: "https://picsum.photos/408" },
+  { type: "image", src: "https://picsum.photos/409" },
+  { type: "image", src: "https://picsum.photos/410" },
+  { type: "image", src: "https://picsum.photos/411" },
+  { type: "image", src: "https://picsum.photos/412" },
+  { type: "image", src: "https://picsum.photos/413" },
+  { type: "image", src: "https://picsum.photos/414" },
+  { type: "image", src: "https://picsum.photos/415" },
+  { type: "image", src: "https://picsum.photos/416" },
+  { type: "image", src: "https://picsum.photos/417" },
+  { type: "image", src: "https://picsum.photos/418" },
+  { type: "image", src: "https://picsum.photos/419" },
+  { type: "image", src: "https://picsum.photos/420" },
+  { type: "image", src: "https://picsum.photos/421" },
+  { type: "image", src: "https://picsum.photos/422" }
+
+];
+
+/* ===== CREAR GRID ===== */
+const grid = document.getElementById("grid");
+
+items.forEach(item => {
+
+  const div = document.createElement("div");
+  div.className = "box";
+
+  if(item.type === "image"){
+    const img = document.createElement("img");
+    img.src = item.src;
+    div.appendChild(img);
+  }
+
+  if(item.type === "video"){
+    const video = document.createElement("video");
+    video.src = item.src;
+    video.muted = true;
+    video.loop = true;
+    video.autoplay = true;
+    div.appendChild(video);
+
+    const icon = document.createElement("div");
+    icon.className = "video-icon";
+    icon.innerHTML = "▶";
+    div.appendChild(icon);
+  }
+
+  div.onclick = () => openModal(item);
+  grid.appendChild(div);
+});
+
+/* ===== MODAL ===== */
+function openModal(item){
+  const modal = document.getElementById("modal");
+  const content = document.getElementById("modalContent");
+
+  content.innerHTML = "";
+
+  if(item.type === "image"){
+    const img = document.createElement("img");
+    img.src = item.src;
+    img.className = "modal-content";
+    content.appendChild(img);
+  }
+
+  if(item.type === "video"){
+    const video = document.createElement("video");
+    video.src = item.src;
+    video.controls = true;
+    video.autoplay = true;
+    video.className = "modal-content";
+    content.appendChild(video);
+  }
+
+  modal.style.display = "flex";
+}
+
+/* cerrar */
+function closeModal(){
+  document.getElementById("modal").style.display = "none";
+}
+
+/* ===== OJOS ===== */
+document.addEventListener("mousemove", e => {
+  document.querySelectorAll(".pupil").forEach(p => {
+    const x = (e.clientX / window.innerWidth) * 20;
+    const y = (e.clientY / window.innerHeight) * 20;
+    p.style.transform = `translate(${x}px, ${y}px)`;
+  });
+});
+
+/* ===== ZOOM ===== */
+let scale = 1;
+
+document.addEventListener("wheel", (e) => {
+  const media = document.querySelector(".modal-content");
+  if(!media) return;
+
+  if(e.deltaY < 0){
+    scale += 0.1;
+  } else {
+    scale -= 0.1;
+  }
+
+  scale = Math.max(0.5, Math.min(scale, 3));
+  media.style.transform = `scale(${scale})`;
+});
+
+</script>
+
+</body>
+</html>}
 
 .logo img {
   width:250px;
