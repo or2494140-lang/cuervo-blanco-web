@@ -5,6 +5,8 @@
 <title>Animation Studios</title>
 
 <style>
+
+/* ===== BASE ===== */
 body {
   margin:0;
   background: radial-gradient(circle, #2b0000, #000000);
@@ -13,28 +15,286 @@ body {
   overflow-x:hidden;
 }
 
-/* Fondo animado sangre */
+/* ===== FONDO SANGRE ===== */
 body::before {
   content:"";
   position:fixed;
   width:100%;
   height:100%;
-  background: linear-gradient(180deg, rgba(255,0,0,0.05), transparent);
-  animation: sangre 5s infinite alternate;
+  background: linear-gradient(180deg, rgba(255,0,0,0.1), transparent);
+  animation: sangre 4s infinite alternate;
 }
 
 @keyframes sangre {
-  from { opacity:0.2; }
-  to { opacity:0.6; }
+  from { opacity:0.3; }
+  to { opacity:0.7; }
 }
 
-/* LOGO */
+/* ===== LOGO ===== */
 .logo {
   text-align:center;
   margin-top:40px;
 }
 
 .logo img {
+  width:250px;
+  filter: drop-shadow(0 0 15px red);
+}
+
+/* ===== GRID ===== */
+.grid {
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:20px;
+  padding:40px;
+}
+
+.box {
+  height:140px;
+  background:#111;
+  border:1px solid red;
+  cursor:pointer;
+  transition:0.3s;
+  background-size:cover;
+  background-position:center;
+  position:relative;
+}
+
+/* overlay oscuro */
+.box::after {
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+}
+
+.box:hover::after {
+  background:rgba(0,0,0,0.1);
+}
+
+.box:hover {
+  transform:scale(1.05);
+}
+
+/* icono video */
+.video-icon {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  font-size:30px;
+  color:white;
+  pointer-events:none;
+}
+
+/* ===== MODAL ===== */
+.modal {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.95);
+  justify-content:center;
+  align-items:center;
+}
+
+.modal img,
+.modal video,
+.modal iframe {
+  max-width:90%;
+  max-height:90%;
+}
+
+/* ===== OJOS ===== */
+.eye {
+  position:fixed;
+  width:60px;
+  height:60px;
+  background:white;
+  border-radius:50%;
+  overflow:hidden;
+}
+
+.pupil {
+  position:absolute;
+  width:20px;
+  height:20px;
+  background:red;
+  border-radius:50%;
+  top:20px;
+  left:20px;
+}
+
+#eye1 { top:20px; left:20px; }
+#eye2 { top:20px; right:20px; }
+
+/* ===== LUCES ===== */
+.light {
+  position:fixed;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  background: radial-gradient(circle, rgba(255,0,0,0.15), transparent);
+  animation: flicker 0.2s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity:0.2;}
+  50% { opacity:0.6;}
+  100% { opacity:0.3;}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ===== LOGO ===== -->
+<div class="logo">
+  <!-- 🔴 CAMBIA AQUI TU LOGO -->
+  <img src="logo.png">
+  <h1>ANIMATION STUDIOS</h1>
+</div>
+
+<!-- ===== GRID ===== -->
+<div class="grid" id="grid"></div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal" id="modal" onclick="closeModal()">
+  <div id="modalContent"></div>
+</div>
+
+<!-- ===== OJOS ===== -->
+<div class="eye" id="eye1"><div class="pupil"></div></div>
+<div class="eye" id="eye2"><div class="pupil"></div></div>
+
+<div class="light"></div>
+
+<script>
+
+/* =====================================================
+🔥 AQUI PONES TUS LINKS (25)
+===================================================== */
+
+const items = [
+
+  /* 🖼️ IMAGEN */
+  { type: "image", src: "https://picsum.photos/400" },
+
+  /* 🎥 VIDEO (mp4 directo) */
+  { type: "video", src: "https://www.w3schools.com/html/mov_bbb.mp4" },
+
+  /* 📄 DOCUMENTO */
+  { type: "doc", src: "https://example.com/file.pdf" },
+
+  /* 🔁 DUPLICA HASTA 25 */
+  { type: "image", src: "https://picsum.photos/401" },
+  { type: "image", src: "https://picsum.photos/402" },
+  { type: "image", src: "https://picsum.photos/403" },
+  { type: "image", src: "https://picsum.photos/404" },
+  { type: "image", src: "https://picsum.photos/405" },
+  { type: "image", src: "https://picsum.photos/406" },
+  { type: "image", src: "https://picsum.photos/407" },
+  { type: "image", src: "https://picsum.photos/408" },
+  { type: "image", src: "https://picsum.photos/409" },
+  { type: "image", src: "https://picsum.photos/410" },
+  { type: "image", src: "https://picsum.photos/411" },
+  { type: "image", src: "https://picsum.photos/412" },
+  { type: "image", src: "https://picsum.photos/413" },
+  { type: "image", src: "https://picsum.photos/414" },
+  { type: "image", src: "https://picsum.photos/415" },
+  { type: "image", src: "https://picsum.photos/416" },
+  { type: "image", src: "https://picsum.photos/417" },
+  { type: "image", src: "https://picsum.photos/418" },
+  { type: "image", src: "https://picsum.photos/419" },
+  { type: "image", src: "https://picsum.photos/420" },
+  { type: "image", src: "https://picsum.photos/421" },
+  { type: "image", src: "https://picsum.photos/422" }
+
+];
+
+/* ===== CREAR GRID ===== */
+const grid = document.getElementById("grid");
+
+items.forEach(item => {
+
+  const div = document.createElement("div");
+  div.className = "box";
+
+  /* preview */
+  if(item.type === "image"){
+    div.style.backgroundImage = `url(${item.src})`;
+  }
+
+  if(item.type === "video"){
+    div.style.backgroundImage = `url(https://via.placeholder.com/400x300?text=VIDEO)`;
+
+    const icon = document.createElement("div");
+    icon.className = "video-icon";
+    icon.innerHTML = "▶";
+    div.appendChild(icon);
+  }
+
+  if(item.type === "doc"){
+    div.style.backgroundImage = `url(https://via.placeholder.com/400x300?text=DOC)`;
+  }
+
+  div.onclick = () => openModal(item);
+
+  grid.appendChild(div);
+});
+
+/* ===== MODAL ===== */
+function openModal(item){
+  const modal = document.getElementById("modal");
+  const content = document.getElementById("modalContent");
+
+  content.innerHTML = "";
+
+  if(item.type === "image"){
+    const img = document.createElement("img");
+    img.src = item.src;
+    content.appendChild(img);
+  }
+
+  if(item.type === "video"){
+    const video = document.createElement("video");
+    video.src = item.src;
+    video.controls = true;
+    video.autoplay = true;
+    content.appendChild(video);
+  }
+
+  if(item.type === "doc"){
+    const iframe = document.createElement("iframe");
+    iframe.src = item.src;
+    iframe.width = "800";
+    iframe.height = "600";
+    content.appendChild(iframe);
+  }
+
+  modal.style.display = "flex";
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display = "none";
+}
+
+/* ===== OJOS ===== */
+document.addEventListener("mousemove", e => {
+  document.querySelectorAll(".pupil").forEach(p => {
+    const x = (e.clientX / window.innerWidth) * 20;
+    const y = (e.clientY / window.innerHeight) * 20;
+    p.style.transform = `translate(${x}px, ${y}px)`;
+  });
+});
+
+</script>
+
+</body>
+</html>.logo img {
   width:250px;
   filter: drop-shadow(0 0 10px red);
 }
