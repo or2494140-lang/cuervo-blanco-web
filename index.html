@@ -311,23 +311,7 @@ document.addEventListener("wheel", (e) => {
 
 </body>
 </html>
-];
 
-/* ===== CREAR GRID ===== */
-const grid = document.getElementById("grid");
-
-items.forEach(item => {
-
-  const div = document.createElement("div");
-  div.className = "box";
-
-  /* preview */
-  if(item.type === "image"){
-    div.style.backgroundImage = `url(${item.src})`;
-  }
-
-  if(item.type === "video"){
-    div.style.backgroundImage = `url(https://via.placeholder.com/400x300?text=VIDEO)`;
 
     const icon = document.createElement("div");
     icon.className = "video-icon";
