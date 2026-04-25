@@ -50,14 +50,18 @@ body::before {
 }
 
 .box {
-  height:140px;
-  background:#111;
+  height:150px;
   border:1px solid red;
   cursor:pointer;
-  transition:0.3s;
-  background-size:cover;
-  background-position:center;
+  overflow:hidden;
   position:relative;
+}
+
+.box img,
+.box video {
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 /* overlay oscuro */
@@ -85,7 +89,6 @@ body::before {
   transform:translate(-50%, -50%);
   font-size:30px;
   color:white;
-  pointer-events:none;
 }
 
 /* ===== MODAL ===== */
@@ -100,11 +103,17 @@ body::before {
   align-items:center;
 }
 
-.modal img,
-.modal video,
-.modal iframe {
-  max-width:90%;
-  max-height:90%;
+#modalContent {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-content {
+  max-width:95vw;
+  max-height:95vh;
+  object-fit:contain;
+  transition:0.2s;
 }
 
 /* ===== OJOS ===== */
@@ -153,7 +162,7 @@ body::before {
 
 <!-- ===== LOGO ===== -->
 <div class="logo">
-  <!-- 🔴 CAMBIA AQUI TU LOGO -->
+  <!-- 🔴 PON TU LOGO AQUI -->
   <img src="logo.png">
   <h1>ANIMATION STUDIOS</h1>
 </div>
@@ -175,23 +184,17 @@ body::before {
 <script>
 
 /* =====================================================
-🔥 AQUI PONES TUS LINKS (25)
+🔥 AQUI PONES TUS LINKS (EDITA SOLO ESTO)
 ===================================================== */
 
 const items = [
 
-  /* 🖼️ IMAGEN */
-  { type: "image", src: "https://picsum.photos/400" },
+  { type: "image", src: "https://res.cloudinary.com/dogerkjlk/image/upload/v1777120581/49_usmowb.png" },
 
-  /* 🎥 VIDEO (mp4 directo) */
   { type: "video", src: "https://www.w3schools.com/html/mov_bbb.mp4" },
 
-  /* 📄 DOCUMENTO */
-  { type: "doc", src: "https://example.com/file.pdf" },
-
-  /* 🔁 DUPLICA HASTA 25 */
-  { type: "image", src: "https://res.cloudinary.com/dogerkjlk/image/upload/v1777120581/49_usmowb.png" },
-  { type: "video", src: "https://res.cloudinary.com/dogerkjlk/video/upload/v1777123963/patroclo_skato0001_txxoks.mp4" },
+  { type: "image", src: "https://picsum.photos/401" },
+  { type: "image", src: "https://picsum.photos/402" },
   { type: "image", src: "https://picsum.photos/403" },
   { type: "image", src: "https://picsum.photos/404" },
   { type: "image", src: "https://picsum.photos/405" },
@@ -213,6 +216,101 @@ const items = [
   { type: "image", src: "https://picsum.photos/421" },
   { type: "image", src: "https://picsum.photos/422" }
 
+];
+
+/* ===== CREAR GRID ===== */
+const grid = document.getElementById("grid");
+
+items.forEach(item => {
+
+  const div = document.createElement("div");
+  div.className = "box";
+
+  if(item.type === "image"){
+    const img = document.createElement("img");
+    img.src = item.src;
+    div.appendChild(img);
+  }
+
+  if(item.type === "video"){
+    const video = document.createElement("video");
+    video.src = item.src;
+    video.muted = true;
+    video.loop = true;
+    video.autoplay = true;
+    div.appendChild(video);
+
+    const icon = document.createElement("div");
+    icon.className = "video-icon";
+    icon.innerHTML = "▶";
+    div.appendChild(icon);
+  }
+
+  div.onclick = () => openModal(item);
+  grid.appendChild(div);
+});
+
+/* ===== MODAL ===== */
+function openModal(item){
+  const modal = document.getElementById("modal");
+  const content = document.getElementById("modalContent");
+
+  content.innerHTML = "";
+
+  if(item.type === "image"){
+    const img = document.createElement("img");
+    img.src = item.src;
+    img.className = "modal-content";
+    content.appendChild(img);
+  }
+
+  if(item.type === "video"){
+    const video = document.createElement("video");
+    video.src = item.src;
+    video.controls = true;
+    video.autoplay = true;
+    video.className = "modal-content";
+    content.appendChild(video);
+  }
+
+  modal.style.display = "flex";
+}
+
+/* cerrar */
+function closeModal(){
+  document.getElementById("modal").style.display = "none";
+}
+
+/* ===== OJOS ===== */
+document.addEventListener("mousemove", e => {
+  document.querySelectorAll(".pupil").forEach(p => {
+    const x = (e.clientX / window.innerWidth) * 20;
+    const y = (e.clientY / window.innerHeight) * 20;
+    p.style.transform = `translate(${x}px, ${y}px)`;
+  });
+});
+
+/* ===== ZOOM ===== */
+let scale = 1;
+
+document.addEventListener("wheel", (e) => {
+  const media = document.querySelector(".modal-content");
+  if(!media) return;
+
+  if(e.deltaY < 0){
+    scale += 0.1;
+  } else {
+    scale -= 0.1;
+  }
+
+  scale = Math.max(0.5, Math.min(scale, 3));
+  media.style.transform = `scale(${scale})`;
+});
+
+</script>
+
+</body>
+</html>
 ];
 
 /* ===== CREAR GRID ===== */
